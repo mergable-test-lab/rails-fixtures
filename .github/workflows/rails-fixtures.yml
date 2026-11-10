@@ -1,0 +1,40 @@
+name: Rails fixture checks
+
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Rails fixtures (${{ matrix.framework }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [minitest, rspec]
+    env:
+      RAILS_ENV: test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Prepare disposable test database
+        run: bundle exec rails db:prepare
+      - name: Run checked-in Minitest examples
+        if: matrix.framework == 'minitest'
+        run: bundle exec rails test
+      - name: Run checked-in RSpec examples
+        if: matrix.framework == 'rspec'
+        run: bundle exec rspec
