@@ -4,6 +4,12 @@ This disposable Rails application contains original synthetic accounts and notes
 
 The public interface selects an account by a route parameter and reads one of its notes. This deliberately simple selection is a test fixture, not an authentication system or a production application. The behavior under test is that an account-scoped lookup returns its own note, while another account's note and a missing note receive the same not-found response.
 
+## Note response
+
+`GET /accounts/:account_id/notes/:id` returns HTTP 200 with `{"title":"<note title>"}` when the note belongs to the selected account. A note owned by another account or a missing note returns HTTP 404 with `{"error":"not_found"}`.
+
+The request examples in `test/integration/note_access_test.rb` and `spec/requests/note_access_spec.rb` cover these responses.
+
 ## Run the checked-in examples
 
 Use Ruby 3.4.5. Install dependencies and create the disposable SQLite database:
