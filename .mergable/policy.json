@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "eligible_changes": [],
   "evidence_requirements": {
     "minitest": {
@@ -37,9 +37,11 @@
     }
   ],
   "actors": {
-    "allowed_reviewers": [],
-    "allow_self_review": false,
-    "require_independent_review": true
+    "allowed_reviewers": [
+      "STCTbone"
+    ],
+    "allow_self_review": true,
+    "require_independent_review": false
   },
   "investigation_limits": {
     "model_calls": 32,
@@ -52,5 +54,11 @@
     "db/**",
     ".github/**",
     ".mergable/**"
-  ]
+  ],
+  "reviewed_merge": {
+    "evidence_requirements": [
+      "minitest",
+      "rspec"
+    ]
+  }
 }
