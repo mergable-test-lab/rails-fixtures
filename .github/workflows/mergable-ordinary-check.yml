@@ -1,0 +1,75 @@
+name: Mergable ordinary check
+run-name: Mergable ${{ inputs.request }}
+on:
+  workflow_dispatch:
+    inputs:
+      deadline:
+        required: true
+        type: string
+      request:
+        required: true
+        type: string
+      assessment:
+        required: true
+        type: string
+      capability:
+        required: true
+        type: string
+      requester:
+        required: true
+        type: string
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
+      workflow_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  ordinary:
+    name: Mergable ${{ inputs.request }} ${{ inputs.assessment }} ${{ inputs.capability }} ${{ inputs.requester }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - name: Budget ${{ inputs.deadline }}
+        env:
+          DEADLINE: ${{ inputs.deadline }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$DEADLINE" =~ ^[0-9]{10}$ ]] || exit 1
+          [[ $(( $(date +%s) + 60 )) -le "$DEADLINE" ]] || exit 1
+      - name: Candidate ${{ inputs.candidate_sha }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify ${{ inputs.base_sha }} ${{ inputs.workflow_sha }}
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+          WORKFLOW_SHA: ${{ inputs.workflow_sha }}
+          REQUESTER: ${{ inputs.requester }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "$REQUESTER" = "$GITHUB_ACTOR_ID" ]] || exit 1
+          [[ "$WORKFLOW_SHA" = "$GITHUB_SHA" ]] || exit 1
+          [[ "$(git rev-parse HEAD)" = "$CANDIDATE_SHA" ]] || exit 1
+          [[ "$(git rev-parse "$BASE_SHA^{commit}")" = "$BASE_SHA" ]] || exit 1
+      - name: Check diff
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -c core.hooksPath=/dev/null diff --no-ext-diff --no-textconv --check "$BASE_SHA" "$CANDIDATE_SHA" > "$RUNNER_TEMP/mergable-diff.txt" 2>&1
