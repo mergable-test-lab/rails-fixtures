@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "eligible_changes": [],
   "evidence_requirements": {
     "minitest": {
@@ -20,15 +20,29 @@
     }
   },
   "capabilities": [],
-  "providers": [],
+  "providers": [
+    {
+      "name": "typesafe",
+      "context_paths": [
+        "README.md"
+      ]
+    }
+  ],
   "actors": {
     "allowed_reviewers": [],
     "allow_self_review": false,
     "require_independent_review": true
   },
   "investigation_limits": {
-    "model_calls": 0,
+    "model_calls": 32,
     "verification_runs": 0,
-    "elapsed_seconds": 0
-  }
+    "elapsed_seconds": 60
+  },
+  "sensitive_areas": [
+    "app/**",
+    "config/**",
+    "db/**",
+    ".github/**",
+    ".mergable/**"
+  ]
 }
