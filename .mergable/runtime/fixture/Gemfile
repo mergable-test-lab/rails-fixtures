@@ -1,0 +1,2 @@
+File.write(ENV.fetch("MERGABLE_SETUP_TRAP", "/mergable-host/setup-trap"), "evaluated")
+raise "Candidate setup must never run on the host"

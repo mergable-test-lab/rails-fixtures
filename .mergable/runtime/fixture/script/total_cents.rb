@@ -1,0 +1,1 @@
+require "json"; input=JSON.parse(STDIN.read); puts JSON.generate(total_cents: input.fetch("items").sum { |i| i.fetch("cents")*i.fetch("quantity") })
