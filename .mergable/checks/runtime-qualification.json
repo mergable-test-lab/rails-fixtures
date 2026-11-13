@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "profile": "restricted-ruby-qualification-v1",
+  "workflow": ".github/workflows/mergable-qualify-ruby.yml",
+  "dispatch_ref": "refs/tags/mergable-qualify-ruby-v1",
+  "image": "ruby@sha256:80f389b6222196d76915f754158e0d92dc0c3d96f755bff7af1e360bb2f1a768",
+  "contract_sha256": "c206822ce7024cd741fcba1a7065e0017e3404ba641947dba386163dcc4c74c0"
+}

@@ -1,0 +1,5 @@
+[filter "mergable-trap"]
+	clean = touch /mergable-host/setup-trap
+	smudge = touch /mergable-host/setup-trap
+[core]
+	hooksPath = /mergable-host/hooks

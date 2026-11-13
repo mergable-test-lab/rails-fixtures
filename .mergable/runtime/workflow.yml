@@ -1,0 +1,79 @@
+name: Mergable restricted __MODE__
+run-name: Mergable ${{ inputs.request }}
+on:
+  workflow_dispatch:
+    inputs:
+      deadline: {required: true, type: string}
+      request: {required: true, type: string}
+      assessment: {required: true, type: string}
+      capability: {required: true, type: string}
+      requester: {required: true, type: string}
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+      workflow_sha: {required: true, type: string}
+      runtime: {required: true, type: string}
+permissions:
+  contents: read
+jobs:
+  restricted:
+    name: Mergable ${{ inputs.request }} ${{ inputs.assessment }} ${{ inputs.capability }} ${{ inputs.requester }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: __MINUTES__
+    env:
+      MERGABLE_INPUTS: ${{ toJSON(inputs) }}
+    steps:
+      - name: Budget ${{ inputs.deadline }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, time
+          inputs = json.loads(os.environ['MERGABLE_INPUTS'])
+          assert int(inputs['deadline']) >= time.time() + __MINUTES__ * 60
+          assert inputs['workflow_sha'] == os.environ['GITHUB_WORKFLOW_SHA']
+          assert inputs['requester'] == os.environ['GITHUB_ACTOR_ID']
+          PY
+      - name: Prepare reviewed runtime
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, re, subprocess, urllib.request
+          expected = __ASSETS__
+          destination = pathlib.Path(os.environ['RUNNER_TEMP']) / 'mergable-controller'
+          destination.mkdir(mode=0o700)
+          for name, digest in expected.items():
+              url = 'https://api.github.com/repos/' + os.environ['GITHUB_REPOSITORY'] + '/contents/.mergable/runtime/' + name + '?ref=' + os.environ['GITHUB_WORKFLOW_SHA']
+              request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json'})
+              class NoRedirect(urllib.request.HTTPRedirectHandler):
+                  def redirect_request(self, *args):
+                      raise ValueError('Redirect refused')
+              with urllib.request.build_opener(NoRedirect).open(request, timeout=15) as response:
+                  body = response.read(131073)
+              assert len(body) <= 131072
+              data = json.loads(body)
+              content = base64.b64decode(data['content'])
+              assert hashlib.sha256(content).hexdigest() == digest
+              (destination / name).parent.mkdir(parents=True, exist_ok=True)
+              (destination / name).write_bytes(content)
+          image = json.loads(json.loads(os.environ['MERGABLE_INPUTS'])['runtime'])['image']
+          assert re.fullmatch(r'ruby@sha256:[0-9a-f]{64}', image)
+          subprocess.run(['docker', 'pull', '--platform=linux/amd64', image], check=True, timeout=60, stdout=subprocess.DEVNULL)
+          PY
+      - name: Execute restricted __MODE__
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 "$RUNNER_TEMP/mergable-controller/controller.py" __MODE__ "$RUNNER_TEMP/mergable-report"
+      - name: Upload trusted report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mergable-${{ inputs.request }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/mergable-report/report.json
+            ${{ runner.temp }}/mergable-report/stdout.bin
+            ${{ runner.temp }}/mergable-report/stderr.bin
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+          overwrite: false

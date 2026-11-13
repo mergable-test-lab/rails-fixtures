@@ -1,0 +1,1 @@
+{"cpus":500000000,"expected":"{\"total_cents\":2500}","input":"{\"items\":[{\"cents\":1250,\"quantity\":2}]}","memory":268435456,"output_bytes":1048576,"pids":32,"platform":"linux/amd64","projection":"script/total_cents.rb","runner":"ubuntu-24.04","schema":1,"tmpfs_bytes":16777216,"uid":1000,"wall_seconds":30}

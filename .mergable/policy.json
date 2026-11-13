@@ -26,6 +26,20 @@
       "areas": [
         "README.md"
       ]
+    },
+    {
+      "name": "runtime-qualification",
+      "workflow": ".github/workflows/mergable-qualify-ruby.yml",
+      "areas": [
+        "README.md"
+      ]
+    },
+    {
+      "name": "ruby-stdio",
+      "workflow": ".github/workflows/mergable-ruby-stdio.yml",
+      "areas": [
+        "script/total_cents.rb"
+      ]
     }
   ],
   "providers": [
@@ -46,7 +60,7 @@
   "investigation_limits": {
     "model_calls": 32,
     "verification_runs": 10,
-    "elapsed_seconds": 600
+    "elapsed_seconds": 1200
   },
   "sensitive_areas": [
     "app/**",
