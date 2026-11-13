@@ -53,3 +53,11 @@ Provider references:
 - [GitHub merge-queue setup](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).
 - [Official checkout action](https://github.com/actions/checkout).
 - [Official Ruby setup action](https://github.com/ruby/setup-ruby).
+
+## Restricted runtime qualification proposal
+
+The optional Ruby stdio capability uses a fixed trusted controller and synthetic isolation suite under `.mergable/runtime`. It shares the host kernel and cannot prove absence of kernel escapes. Qualification executes only the packaged synthetic cases. Candidate execution stays unavailable until Mergable verifies that actual hosted qualification.
+
+The one prewritten candidate input expects total_cents 2500 for two units priced at 1250 cents each. Matching that one case establishes no broader correctness or assertion count. Candidate dependencies and repository setup do not run on the host. Both fixed workflows grant contents read only.
+
+The fixture keeps ten lifetime verification slots and an elapsed allowance of 1200 seconds, providing queue/setup margin for the qualifier's 600-second admission requirement. No model-call allocation, automatic categories, GitHub required checks or queue policy changes. The installation by itself grants no merge authority.
