@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "eligible_changes": [],
+  "evidence_requirements": {
+    "minitest": {
+      "workflow": ".github/workflows/rails-fixtures.yml",
+      "workflow_job": "tests",
+      "job": "Rails fixtures (minitest)",
+      "required_steps": [
+        "Run checked-in Minitest examples"
+      ]
+    },
+    "rspec": {
+      "workflow": ".github/workflows/rails-fixtures.yml",
+      "workflow_job": "tests",
+      "job": "Rails fixtures (rspec)",
+      "required_steps": [
+        "Run checked-in RSpec examples"
+      ]
+    }
+  },
+  "capabilities": [],
+  "providers": [],
+  "actors": {
+    "allowed_reviewers": [],
+    "allow_self_review": false,
+    "require_independent_review": true
+  },
+  "investigation_limits": {
+    "model_calls": 0,
+    "verification_runs": 0,
+    "elapsed_seconds": 0
+  }
+}
