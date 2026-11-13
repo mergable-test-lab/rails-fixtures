@@ -8,6 +8,8 @@ The public interface selects an account by a route parameter and reads one of it
 
 `GET /accounts/:account_id/notes/:id` returns HTTP 200 with `{"title":"<note title>"}` when the note belongs to the selected account. A note owned by another account or a missing note returns HTTP 404 with `{"error":"not_found"}`.
 
+Missing and cross-account notes use the same not-found JSON response.
+
 The [Minitest request examples](test/integration/note_access_test.rb) and [RSpec request examples](spec/requests/note_access_spec.rb) cover these responses.
 
 ## Run the checked-in examples
