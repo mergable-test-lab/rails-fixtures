@@ -19,7 +19,15 @@
       ]
     }
   },
-  "capabilities": [],
+  "capabilities": [
+    {
+      "name": "ordinary",
+      "workflow": ".github/workflows/mergable-ordinary-check.yml",
+      "areas": [
+        "README.md"
+      ]
+    }
+  ],
   "providers": [
     {
       "name": "typesafe",
@@ -35,8 +43,8 @@
   },
   "investigation_limits": {
     "model_calls": 32,
-    "verification_runs": 0,
-    "elapsed_seconds": 60
+    "verification_runs": 10,
+    "elapsed_seconds": 600
   },
   "sensitive_areas": [
     "app/**",
