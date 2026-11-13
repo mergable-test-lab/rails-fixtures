@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "profile": "git-diff-check-v1",
+  "workflow": ".github/workflows/mergable-ordinary-check.yml",
+  "dispatch_ref": "refs/tags/mergable-check-v1"
+}
