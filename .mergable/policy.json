@@ -17,6 +17,14 @@
       "required_steps": [
         "Run checked-in RSpec examples"
       ]
+    },
+    "openai_demo_missing": {
+      "workflow": ".github/workflows/rails-fixtures.yml",
+      "workflow_job": "openai_demo_missing",
+      "job": "OpenAI demonstration missing check",
+      "required_steps": [
+        "Intentionally absent synthetic verification"
+      ]
     }
   },
   "capabilities": [
@@ -48,6 +56,12 @@
       "context_paths": [
         "README.md"
       ]
+    },
+    {
+      "name": "openai",
+      "context_paths": [
+        "README.md"
+      ]
     }
   ],
   "actors": {
@@ -72,7 +86,8 @@
   "reviewed_merge": {
     "evidence_requirements": [
       "minitest",
-      "rspec"
+      "rspec",
+      "openai_demo_missing"
     ]
   }
 }
