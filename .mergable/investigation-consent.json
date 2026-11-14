@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "repository_id": 1453164373,
+  "provider": "openai",
+  "profile": "openai-public-pilot-v1",
+  "origins": [
+    "product_question",
+    "accepted_dashboard_criteria",
+    "approved_git_source",
+    "typed_metadata"
+  ],
+  "question_ids": [
+    "explain-semantic-unknown-v1",
+    "explain-evidence-gap-v1"
+  ],
+  "criteria_sha256": "682d9a8d4bd554b77042fa2bd552881726360f6aedefd4a5af4f470c9cb1ce7d"
+}
